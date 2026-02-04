@@ -1,11 +1,189 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html id="master-html" lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>SkyValuta</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Currency Pro</title>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #a855f7; --text: #f8fafc; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 12px 5%; background: rgba(30,41,59,0.9); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #334155; }
+        .u-pic { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--accent); cursor: pointer; object-fit: cover; }
+        .main-card { max-width: 480px; margin: 30px auto; background: var(--card); padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        .dl-link { background: linear-gradient(135deg, #059669, #10b981); color: white; padding: 15px 35px; border-radius: 12px; text-decoration: none; display: inline-block; font-weight: bold; margin-top: 20px; }
+        #side-bar { position: fixed; top: 0; right: -320px; width: 280px; height: 100%; background: #1e293b; z-index: 2000; transition: 0.4s; padding: 25px; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
+        .l-btn { border: none; padding: 10px; border-radius: 8px; color: white; cursor: pointer; font-weight: bold; width: 100%; margin: 4px 0; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center; }
+        .window { background: var(--card); padding: 20px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; }
+        input, select { width: 100%; padding: 10px; margin: 8px 0; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; box-sizing: border-box; }
+        .stars span { font-size: 28px; color: #475569; cursor: pointer; }
+        .stars span.on { color: #fbbf24; }
+        .stats-box { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; margin-top: 10px; font-size: 14px; }
+    </style>
 </head>
-<body style="font-family: Arial; text-align:center; margin-top:50px;">
-  <h1>🚀 SkyValuta</h1>
-  <p>الموقع شغال 100%</p>
+<body>
+
+    <header>
+        <div onclick="openMenu()" style="font-size:28px; cursor:pointer; color:var(--accent)">☰</div>
+        <img id="h-img" class="u-pic" onclick="openProfile()">
+    </header>
+
+    <main>
+        <div class="main-card">
+            <h2 id="L-app">Global Currency Pro</h2>
+            <p id="L-desc">تحويل العملات من الدينار العراقي إلى الدولار و150 دولة أخرى.</p>
+            <div style="text-align:right; background:rgba(0,0,0,0.2); padding:15px; border-radius:12px; margin:15px 0;">
+                <p>✅ <span id="L-f1">يدعم أكثر من 150 دولة</span></p>
+                <p>✅ <span id="L-f2">تصميم احترافي وسهل الاستخدام</span></p>
+                <p>📦 <span id="L-size">الحجم: 33.42 ميغا بايت</span></p>
+            </div>
+            <a href="https://appsgeyser.io/19506475/Global Currency Pro" class="dl-link" id="L-btn">تنزيل الآن</a>
+        </div>
+    </main>
+
+    <div id="side-bar">
+        <div onclick="closeMenu()" style="cursor:pointer; margin-bottom:20px;">✕ <span id="L-close">إغلاق</span></div>
+        <h3 id="L-rateT">تقييم الموقع</h3>
+        <div class="stars" id="star-box">
+            <span onclick="giveRate(1)">★</span><span onclick="giveRate(2)">★</span><span onclick="giveRate(3)">★</span><span onclick="giveRate(4)">★</span><span onclick="giveRate(5)">★</span>
+        </div>
+        <div class="stats-box">
+            <p><span id="L-total-stars">مجموع النجوم:</span> <span id="star-sum">0</span> ★</p>
+            <p><span id="L-total-voters">عدد المقيمين:</span> <span id="count-num">0</span></p>
+        </div>
+        <hr style="opacity:0.1; margin:20px 0;">
+        <h3 id="L-langT">اللغات</h3>
+        <button class="l-btn" style="background:#059669" onclick="setL('ar')">العربية</button>
+        <button class="l-btn" style="background:#2563eb" onclick="setL('en')">English</button>
+        <button class="l-btn" style="background:#dc2626" onclick="setL('zh')">中文</button>
+        <button class="l-btn" style="background:#7c3aed" onclick="setL('ko')">한국어</button>
+    </div>
+
+    <div id="p-modal" class="overlay">
+        <div id="p-view" class="window">
+            <h3 id="L-pTitle">بياناتي</h3>
+            <img id="p-img" style="width:80px; height:80px; border-radius:50%; border:2px solid var(--accent); object-fit:cover; margin-bottom:10px;">
+            <div style="text-align:right; font-size:14px;">
+                <p><b id="L-n">الاسم:</b> <span id="v-n"></span></p>
+                <p><b id="L-a">العمر:</b> <span id="v-a"></span></p>
+                <p><b id="L-p">الحساب:</b> <span id="v-p"></span></p>
+            </div>
+            <button class="l-btn" style="background:var(--accent)" onclick="goEdit()" id="L-edit">تعديل البيانات</button>
+            <button onclick="closeProfile()" style="background:none; border:none; color:#94a3b8; margin-top:10px; cursor:pointer;" id="L-mClose">إغلاق</button>
+        </div>
+
+        <div id="p-edit" class="window" style="display:none;">
+            <h3 id="L-eTitle">تعديل الملف</h3>
+            <input type="text" id="in-n" placeholder="الاسم">
+            <input type="number" id="in-a" placeholder="العمر">
+            <select id="in-p">
+                <option value="عام" id="opt-public">عام</option>
+                <option value="خاص" id="opt-private">خاص</option>
+            </select>
+            <p id="L-chPic" style="font-size:12px; margin:5px 0;">تغيير الصورة:</p>
+            <input type="file" id="in-f" accept="image/*">
+            <button class="l-btn" style="background:#10b981; margin-top:10px;" onclick="saveAll()" id="L-save">حفظ</button>
+        </div>
+    </div>
+
+    <script>
+        let db = JSON.parse(localStorage.getItem('user_db')) || { n:"عبدالله", a:16, p:"عام", img:"https://via.placeholder.com/100" };
+        let ratingData = JSON.parse(localStorage.getItem('site_rating')) || { count: 0, sum: 0, lastTime: null };
+
+        const langData = {
+            ar: { app:"Global Currency Pro", desc:"تحويل العملات من الدينار العراقي إلى الدولار و150 دولة أخرى.", f1:"يدعم أكثر من 150 دولة", f2:"تصميم احترافي وسهل الاستخدام", size:"الحجم: 33.42 ميغا بايت", btn:"تنزيل الآن", rateT:"تقييم الموقع", tStars:"مجموع النجوم:", tVoters:"عدد المقيمين:", langT:"اللغات", close:"إغلاق", pTitle:"بياناتي", n:"الاسم:", a:"العمر:", p:"الحساب:", edit:"تعديل البيانات", mClose:"إغلاق", eTitle:"تعديل الملف", save:"حفظ التغييرات", chPic:"تغيير الصورة:", pub:"عام", priv:"خاص" },
+            en: { app:"Global Currency Pro", desc:"Currency converter from IQD to USD and 150+ other countries.", f1:"Supports 150+ countries", f2:"Professional & Easy to use", size:"Size: 33.42 MB", btn:"Download Now", rateT:"Rate Website", tStars:"Total Stars:", tVoters:"Total Voters:", langT:"Languages", close:"Close", pTitle:"My Profile", n:"Name:", a:"Age:", p:"Privacy:", edit:"Edit Profile", mClose:"Close", eTitle:"Edit Info", save:"Save Changes", chPic:"Change Picture:", pub:"Public", priv:"Private" },
+            zh: { app:"全球货币专家", desc:"货币转换器。", f1:"支持150个国家", f2:"专业设计", size:"大小: 33.42 MB", btn:"立即下载", rateT:"评价", tStars:"总星数:", tVoters:"评价人数:", langT:"语言", close:"关闭", pTitle:"资料", n:"姓名:", a:"年龄:", p:"隐私:", edit:"编辑", mClose:"关闭", eTitle:"修改", save:"保存", chPic:"更换照片:", pub:"公开", priv:"私有" },
+            ko: { app:"글로벌 환율 프로", desc:"환전 프로.", f1:"150개국 지원", f2:"전문 디자인", size:"크기: 33.42 MB", btn:"다운로드", rateT:"평가", tStars:"총 별점:", tVoters:"평가자 수:", langT:"언어", close:"닫기", pTitle:"프로필", n:"이름:", a:"나이:", p:"공개 여부:", edit:"편집", mClose:"닫기", eTitle:"정보 수정", save:"저장", chPic:"사진 변경:", pub:"공개", priv:"비공개" }
+        };
+
+        window.onload = () => { sync(); updateRatingUI(); };
+
+        function sync() {
+            document.getElementById('h-img').src = db.img;
+            document.getElementById('p-img').src = db.img;
+            document.getElementById('v-n').innerText = db.n;
+            document.getElementById('v-a').innerText = db.a;
+            document.getElementById('v-p').innerText = db.p;
+        }
+
+        function openMenu() { document.getElementById('side-bar').style.right = '0'; }
+        function closeMenu() { document.getElementById('side-bar').style.right = '-320px'; }
+
+        function giveRate(n) {
+            let now = new Date().getTime();
+            if(ratingData.lastTime && (now - ratingData.lastTime < 7*24*60*60*1000)) {
+                alert("لقد قيمت بالفعل! انتظر 7 أيام.");
+                return;
+            }
+            ratingData.count++;
+            ratingData.sum += n;
+            ratingData.lastTime = now;
+            localStorage.setItem('site_rating', JSON.stringify(ratingData));
+            updateRatingUI();
+            alert("تم تسجيل " + n + " نجوم!");
+        }
+
+        function updateRatingUI() {
+            document.getElementById('count-num').innerText = ratingData.count;
+            document.getElementById('star-sum').innerText = ratingData.sum;
+        }
+
+        function setL(l) {
+            let t = langData[l] || langData['en'];
+            document.getElementById('master-html').dir = (l === 'ar' ? 'rtl' : 'ltr');
+            document.getElementById('L-app').innerText = t.app;
+            document.getElementById('L-desc').innerText = t.desc;
+            document.getElementById('L-f1').innerText = t.f1;
+            document.getElementById('L-f2').innerText = t.f2;
+            document.getElementById('L-size').innerText = t.size;
+            document.getElementById('L-btn').innerText = t.btn;
+            document.getElementById('L-rateT').innerText = t.rateT;
+            document.getElementById('L-total-stars').innerText = t.tStars;
+            document.getElementById('L-total-voters').innerText = t.tVoters;
+            document.getElementById('L-langT').innerText = t.langT;
+            document.getElementById('L-close').innerText = t.close;
+            document.getElementById('L-pTitle').innerText = t.pTitle;
+            document.getElementById('L-n').innerText = t.n;
+            document.getElementById('L-a').innerText = t.a;
+            document.getElementById('L-p').innerText = t.p;
+            document.getElementById('L-edit').innerText = t.edit;
+            document.getElementById('L-mClose').innerText = t.mClose;
+            document.getElementById('L-eTitle').innerText = t.eTitle;
+            document.getElementById('L-save').innerText = t.save;
+            document.getElementById('L-chPic').innerText = t.chPic;
+            document.getElementById('opt-public').innerText = t.pub;
+            document.getElementById('opt-private').innerText = t.priv;
+            closeMenu();
+        }
+
+        function openProfile() { document.getElementById('p-modal').style.display = 'flex'; }
+        function closeProfile() { document.getElementById('p-modal').style.display = 'none'; document.getElementById('p-view').style.display='block'; document.getElementById('p-edit').style.display='none'; }
+        
+        function goEdit() { 
+            document.getElementById('p-view').style.display='none'; 
+            document.getElementById('p-edit').style.display='block'; 
+            document.getElementById('in-n').value = db.n; 
+            document.getElementById('in-a').value = db.a; 
+            document.getElementById('in-p').value = db.p;
+        }
+
+        function saveAll() {
+            let f = document.getElementById('in-f').files[0];
+            if(f) {
+                let r = new FileReader();
+                r.onload = (e) => { db.img = e.target.result; finish(); };
+                r.readAsDataURL(f);
+            } else { finish(); }
+        }
+
+        function finish() {
+            db.n = document.getElementById('in-n').value;
+            db.a = document.getElementById('in-a').value;
+            db.p = document.getElementById('in-p').value;
+            localStorage.setItem('user_db', JSON.stringify(db));
+            sync(); closeProfile(); alert("تم حفظ التغييرات!");
+        }
+    </script>
 </body>
 </html>
